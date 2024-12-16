@@ -9,13 +9,18 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "unused-imports.helloWorld",
-        "title": "Hello World"
+        "command": "extension.removeUnusedImportsInCurrentFile",
+        "title": "Remove Unused Imports (File)"
+      },
+      {
+        "command": "extension.removeUnusedImportsInProject",
+        "title": "Remove Unused Imports (Project)"
       }
     ]
   },
