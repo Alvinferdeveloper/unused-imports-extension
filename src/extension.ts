@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { removeUnusedImportsInCurrentFile, removeUnusedImportsInProject } from './actions';
 
 export function activate(context: vscode.ExtensionContext): void {
