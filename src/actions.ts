@@ -6,7 +6,7 @@ export function removeUnusedImports(text: string): string {
 
   // First pass: collect imports and find identifiers used in the code
   lines.forEach((line, index) => {
-    const importMatch = line.match(/^import\s+(.*?)\s+from\s+['"].+?['"];?$/);
+    const importMatch = line.trim().match(/^import\s+(.*?)\s+from\s+['"].+?['"];?$/);
     if (importMatch) {
       importStatements.push({ line, index });
     } else {
