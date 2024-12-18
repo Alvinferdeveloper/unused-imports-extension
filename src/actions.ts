@@ -83,6 +83,22 @@ export async function removeUnusedImportsInCurrentFile(): Promise<void> {
 }
 
 export async function removeUnusedImportsInProject(text: string): Promise<void> {
+  const files = await vscode.workspace.findFiles('**/*.ts', '**/node_modules/**');
 
+  for (const file of files) {
+    const document = await vscode.workspace.openTextDocument(file);
+    const text = document.getText();
+    const updatedText = removeUnusedImports(text);
+    const edit = new vscode.WorkspaceEdit();
+    const fullRange = new vscode.Range(
+      document.positionAt(0),
+      document.positionAt(text.length)
+    );
+
+    edit.replace(document.uri, fullRange, updatedText);
+    await vscode.workspace.applyEdit(edit);
+  }
+
+  vscode.window.showInformationMessage('Unused imports removed from the entire project.');
 }
 
