@@ -34,11 +34,11 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         isUsed = true;
       }
     }
-
     if (namedImportMatch) {
       const namedImports = namedImportMatch[1].split(',').map((name) => name.trim());
-      const usedNamedImports = namedImports.filter((name) => usedIdentifiers.has(name));
-
+      const usedNamedImports = namedImports.filter((name) => {
+        return usedIdentifiers.has(name) && !new RegExp(`${name}\s*:`).test(text);
+      });
       if (usedNamedImports.length > 0) {
         isUsed = true;
         // Update the import line to include only used named imports
