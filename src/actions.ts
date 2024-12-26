@@ -34,6 +34,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         isUsed = true;
       }
     }
+    
     if (namedImportMatch) {
       const namedImports = namedImportMatch[1].split(',').map((name) => name.trim());
       const usedNamedImports = namedImports.filter((name) => {
@@ -63,6 +64,34 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         lines[index] = updatedLine;
       }
     }
+    const combinedImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)?,?\s*\{\s*([^}]+)\s*\}\s+from/);
+    if (combinedImportMatch) {
+      const defaultImport = combinedImportMatch[1];
+      const namedImports = combinedImportMatch[2].split(',').map((name) => name.trim());
+
+      const usedNamedImports = namedImports.filter((name) => usedIdentifiers.has(name));
+      const isDefaultUsed = defaultImport && usedIdentifiers.has(defaultImport);
+
+      
+      if (isDefaultUsed || usedNamedImports.length > 0) {
+        isUsed = true;
+        unusedImportsPresents = true;
+        let updatedLine = 'import ';
+        if (isDefaultUsed) {
+          updatedLine += defaultImport;
+        }
+        if (isDefaultUsed && usedNamedImports.length > 0) {
+          updatedLine += ', ';
+        }
+        if (usedNamedImports.length > 0) {
+          updatedLine += `{ ${usedNamedImports.join(', ')} }`;
+        }
+        updatedLine += ' from' + line.split('from')[1];
+        lines[index] = updatedLine;
+      }
+    }
+
+    console.log(lines[index], isUsed);
 
     if (!isUsed) {
       unusedImportsPresents = true;
