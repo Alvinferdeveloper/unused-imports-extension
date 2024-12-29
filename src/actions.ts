@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { classifyLines, namedImportAction } from "./imports";
+import { classifyLines, combinedImportAction, namedImportAction } from "./imports";
 export function removeUnusedImports(text: string): { newLines: string, unusedImportsPresents: boolean } {
   const lines = text.split('\n');
   let unusedImportsPresents = false;
@@ -57,28 +57,13 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
     else if (combinedImportMatch) {
       const defaultImport = combinedImportMatch[1];
       const namedImports = combinedImportMatch[2].split(',').map((name) => name.trim());
-
-      const usedNamedImports = namedImports.filter((name) => usedIdentifiers.has(name));
-      const isDefaultUsed = defaultImport && usedIdentifiers.has(defaultImport);
-      if (usedNamedImports.length < namedImports.length || !isDefaultUsed) {
-        unusedImportsPresents = true;
+      const combinedImport = combinedImportAction(namedImports, defaultImport, usedIdentifiers, line);
+      isUsed = combinedImport.isUsed;
+      unusedImportsPresents = combinedImport.unusedImportsPresents;
+      if(combinedImport.newLine){
+        lines[index] = combinedImport.newLine;
       }
-
-      if (isDefaultUsed || usedNamedImports.length > 0) {
-        isUsed = true;
-        let updatedLine = 'import ';
-        if (isDefaultUsed) {
-          updatedLine += defaultImport;
-        }
-        if (isDefaultUsed && usedNamedImports.length > 0) {
-          updatedLine += ', ';
-        }
-        if (usedNamedImports.length > 0) {
-          updatedLine += `{ ${usedNamedImports.join(', ')} }`;
-        }
-        updatedLine += ' from' + line.split('from')[1];
-        lines[index] = updatedLine;
-      }
+      
     }
 
 
