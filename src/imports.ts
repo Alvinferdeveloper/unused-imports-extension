@@ -1,3 +1,5 @@
+import { importRegexs } from "./constants";
+
 export function removeUnusedImports(text: string): { newLines: string, unusedImportsPresents: boolean } {
     const lines = text.split('\n');
     let unusedImportsPresents = false;
@@ -137,11 +139,18 @@ function combinedImportAction(namedImports: string[], defaultImport: string, use
 }
 
 function importMatches(line: string){
-    const defaultImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)\s+from/);
-    const namedImportMatch = line.match(/import\s+\{\s*([^}]+)\s*\}\s+from/);
-    const wildcardImportMatch = line.match(/^import\s+\*\s+as\s+([a-zA-Z_$][a-zA-Z_$0-9]*)\s+from/);
-    const typeImportMatch = line.match(/^import\s+type\s+\{\s*([^}]+)\s*\}\s+from/);
-    const combinedImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)?,?\s*\{\s*([^}]+)\s*\}\s+from/);
+    const { 
+        DEFAULT_IMPORT,
+        NAMED_IMPORT,
+        WILD_CARD_IMPORT,
+        TYPE_IMPORT,
+        COMBINED_IMPORT
+    } = importRegexs;
+    const defaultImportMatch = line.match(DEFAULT_IMPORT);
+    const namedImportMatch = line.match(NAMED_IMPORT);
+    const wildcardImportMatch = line.match(WILD_CARD_IMPORT);
+    const typeImportMatch = line.match(TYPE_IMPORT);
+    const combinedImportMatch = line.match(COMBINED_IMPORT);
 
     return {
         defaultImportMatch,
