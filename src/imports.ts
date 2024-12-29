@@ -1,4 +1,79 @@
-export function classifyLines(lines: string[]) {
+export function removeUnusedImports(text: string): { newLines: string, unusedImportsPresents: boolean } {
+    const lines = text.split('\n');
+    let unusedImportsPresents = false;
+    let isUsed = false;
+  
+    // First pass: collect imports and find identifiers used in the code
+    const { usedIdentifiers, importStatements } = classifyLines(lines);
+  
+    // Second pass: filter unused imports
+    importStatements.forEach(({ line, index }) => {
+      const {
+        defaultImportMatch,
+        namedImportMatch,
+        wildcardImportMatch,
+        typeImportMatch,
+        combinedImportMatch
+      } = importMatches(line);
+  
+      if (defaultImportMatch) {
+        const defaultImport = defaultImportMatch[1];
+        if (usedIdentifiers.has(defaultImport)) {
+          isUsed = true;
+        }
+      }
+  
+      else if (namedImportMatch) {
+        const namedImports = namedImportMatch[1].split(',').map((name) => name.trim());
+        const usedNamedImports = namedImports.filter((name) => {
+          return usedIdentifiers.has(name) && !new RegExp(`${name}\s*:`).test(text);
+        });
+        const namedImport = namedImportAction(usedNamedImports, namedImports, usedIdentifiers, line);
+        isUsed = namedImport.isUsed;
+        unusedImportsPresents = namedImport.unusedImportsPresents;
+        if (namedImport.newLine) {
+          lines[index] = namedImport.newLine;
+        }
+      }
+  
+      else if (wildcardImportMatch) {
+        const wildcardImport = wildcardImportMatch[1];
+        if (usedIdentifiers.has(wildcardImport)) {
+          isUsed = true;
+        }
+      }
+      else if (typeImportMatch) {
+        const typeImports = typeImportMatch[1].split(',').map((name) => name.trim());
+        const usedTypeImports = typeImports.filter((name) => usedIdentifiers.has(name));
+  
+        if (usedTypeImports.length > 0) {
+          isUsed = true;
+          const updatedLine = `import type { ${usedTypeImports.join(', ')} } from` + line.split('from')[1];
+          lines[index] = updatedLine;
+        }
+      }
+      else if (combinedImportMatch) {
+        const defaultImport = combinedImportMatch[1];
+        const namedImports = combinedImportMatch[2].split(',').map((name) => name.trim());
+        const combinedImport = combinedImportAction(namedImports, defaultImport, usedIdentifiers, line);
+        isUsed = combinedImport.isUsed;
+        unusedImportsPresents = combinedImport.unusedImportsPresents;
+        if(combinedImport.newLine){
+          lines[index] = combinedImport.newLine;
+        }
+        
+      }
+  
+  
+      if (!isUsed) {
+        unusedImportsPresents = true;
+        lines[index] = ''; // Remove unused import
+      }
+    });
+    const newLines = lines.join('\n');
+    return { newLines, unusedImportsPresents };
+  }
+function classifyLines(lines: string[]) {
     const usedIdentifiers = new Set<string>();
     const importStatements: { line: string; index: number }[] = [];
     lines.forEach((line, index) => {
@@ -15,7 +90,7 @@ export function classifyLines(lines: string[]) {
     return { usedIdentifiers, importStatements };
 }
 
-export function namedImportAction(usedNamedImports: string[], namedImports: string[], usedIdentifiers: Set<string>, line: string) {
+function namedImportAction(usedNamedImports: string[], namedImports: string[], usedIdentifiers: Set<string>, line: string) {
     let isUsed = false;
     let unusedImportsPresents = false;
     let newLine = null;
@@ -32,7 +107,7 @@ export function namedImportAction(usedNamedImports: string[], namedImports: stri
     return { isUsed, newLine, unusedImportsPresents };
 }
 
-export function combinedImportAction(namedImports: string[], defaultImport: string, usedIdentifiers: Set<string>, line: string) {
+function combinedImportAction(namedImports: string[], defaultImport: string, usedIdentifiers: Set<string>, line: string) {
     const usedNamedImports = namedImports.filter((name) => usedIdentifiers.has(name));
     const isDefaultUsed = defaultImport && usedIdentifiers.has(defaultImport);
     let unusedImportsPresents = false;
@@ -59,4 +134,20 @@ export function combinedImportAction(namedImports: string[], defaultImport: stri
     }
 
     return { isUsed, unusedImportsPresents, newLine };
+}
+
+function importMatches(line: string){
+    const defaultImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)\s+from/);
+    const namedImportMatch = line.match(/import\s+\{\s*([^}]+)\s*\}\s+from/);
+    const wildcardImportMatch = line.match(/^import\s+\*\s+as\s+([a-zA-Z_$][a-zA-Z_$0-9]*)\s+from/);
+    const typeImportMatch = line.match(/^import\s+type\s+\{\s*([^}]+)\s*\}\s+from/);
+    const combinedImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)?,?\s*\{\s*([^}]+)\s*\}\s+from/);
+
+    return {
+        defaultImportMatch,
+        namedImportMatch,
+        wildcardImportMatch,
+        typeImportMatch,
+        combinedImportMatch
+    };
 }
