@@ -14,3 +14,20 @@ export function classifyLines(lines: string[]) {
     });
     return { usedIdentifiers, importStatements };
 }
+
+export function namedImportAction(usedNamedImports:string[],namedImports: string[], usedIdentifiers: Set<string>, line: string) {
+    let isUsed = false;
+    let unusedImportsPresents = false;
+    let newLine = null;
+    if (usedNamedImports.length > 0) {
+        isUsed = true;
+        const updatedLine = `import { ${usedNamedImports.join(', ')} } from` + line.split('from')[1];
+        newLine = updatedLine;
+    }
+
+    if (usedNamedImports.length < namedImports.length) {
+        unusedImportsPresents = true;
+    }
+
+    return { isUsed, newLine, unusedImportsPresents };
+}

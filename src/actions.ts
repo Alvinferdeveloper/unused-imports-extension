@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import { classifyLines } from "./imports";
-export function removeUnusedImports(text: string): { newLines: string, unusedImportsPresents: boolean} {
+import { classifyLines, namedImportAction } from "./imports";
+export function removeUnusedImports(text: string): { newLines: string, unusedImportsPresents: boolean } {
   const lines = text.split('\n');
   let unusedImportsPresents = false;
-  
+
   // First pass: collect imports and find identifiers used in the code
   const { usedIdentifiers, importStatements } = classifyLines(lines);
- 
+
   // Second pass: filter unused imports
   importStatements.forEach(({ line, index }) => {
     const defaultImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)\s+from/);
@@ -24,23 +24,18 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         isUsed = true;
       }
     }
-    
+
     else if (namedImportMatch) {
       const namedImports = namedImportMatch[1].split(',').map((name) => name.trim());
       const usedNamedImports = namedImports.filter((name) => {
         return usedIdentifiers.has(name) && !new RegExp(`${name}\s*:`).test(text);
       });
-      if (usedNamedImports.length > 0) {
-        isUsed = true;
-        // Update the import line to include only used named imports
-        const updatedLine = `import { ${usedNamedImports.join(', ')} } from` + line.split('from')[1];
-        lines[index] = updatedLine;
+      const namedImport = namedImportAction(usedNamedImports, namedImports, usedIdentifiers, line);
+      isUsed = namedImport.isUsed;
+      unusedImportsPresents = namedImport.unusedImportsPresents;
+      if (namedImport.newLine) {
+        lines[index] = namedImport.newLine;
       }
-
-      if(usedNamedImports.length < namedImports.length ){
-        unusedImportsPresents = true;
-      }
-      
     }
 
     else if (wildcardImportMatch) {
@@ -65,10 +60,10 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
 
       const usedNamedImports = namedImports.filter((name) => usedIdentifiers.has(name));
       const isDefaultUsed = defaultImport && usedIdentifiers.has(defaultImport);
-      if(usedNamedImports.length < namedImports.length || !isDefaultUsed){
+      if (usedNamedImports.length < namedImports.length || !isDefaultUsed) {
         unusedImportsPresents = true;
       }
-      
+
       if (isDefaultUsed || usedNamedImports.length > 0) {
         isUsed = true;
         let updatedLine = 'import ';
@@ -93,7 +88,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
     }
   });
   const newLines = lines.join('\n');
-  return { newLines, unusedImportsPresents};
+  return { newLines, unusedImportsPresents };
 }
 
 export async function removeUnusedImportsInCurrentFile(): Promise<void> {
@@ -105,14 +100,14 @@ export async function removeUnusedImportsInCurrentFile(): Promise<void> {
 
   const document = editor.document;
   const text = document.getText();
-  const { newLines, unusedImportsPresents} = removeUnusedImports(text);
+  const { newLines, unusedImportsPresents } = removeUnusedImports(text);
 
   const edit = new vscode.WorkspaceEdit();
   const fullRange = new vscode.Range(
     document.positionAt(0),
     document.positionAt(text.length)
   );
-  if(unusedImportsPresents){
+  if (unusedImportsPresents) {
     edit.replace(document.uri, fullRange, newLines);
     await vscode.workspace.applyEdit(edit);
 
@@ -128,13 +123,13 @@ export async function removeUnusedImportsInProject(): Promise<void> {
   for (const file of files) {
     const document = await vscode.workspace.openTextDocument(file);
     const text = document.getText();
-    const { newLines, unusedImportsPresents} = removeUnusedImports(text);
+    const { newLines, unusedImportsPresents } = removeUnusedImports(text);
     const edit = new vscode.WorkspaceEdit();
     const fullRange = new vscode.Range(
       document.positionAt(0),
       document.positionAt(text.length)
     );
-    if(unusedImportsPresents){
+    if (unusedImportsPresents) {
       edit.replace(document.uri, fullRange, newLines);
       await vscode.workspace.applyEdit(edit);
     }
