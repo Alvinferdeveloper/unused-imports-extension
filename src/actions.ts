@@ -1,23 +1,12 @@
 import * as vscode from "vscode";
+import { classifyLines } from "./imports";
 export function removeUnusedImports(text: string): { newLines: string, unusedImportsPresents: boolean} {
   const lines = text.split('\n');
-  const usedIdentifiers = new Set<string>();
-  const importStatements: { line: string; index: number }[] = [];
   let unusedImportsPresents = false;
-
+  
   // First pass: collect imports and find identifiers used in the code
-  lines.forEach((line, index) => {
-    const importMatch = line.trim().match(/^import\s+(.*?)\s+from\s+['"].+?['"];?$/);
-    if (importMatch) {
-      importStatements.push({ line, index });
-    } else {
-      const matches = line.match(/\b[a-zA-Z_$][a-zA-Z_$0-9]*\b/g);
-      if (matches) {
-        matches.forEach((id) => usedIdentifiers.add(id));
-      }
-    }
-  });
-
+  const { usedIdentifiers, importStatements } = classifyLines(lines);
+ 
   // Second pass: filter unused imports
   importStatements.forEach(({ line, index }) => {
     const defaultImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)\s+from/);
@@ -91,7 +80,6 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
       }
     }
 
-    console.log(lines[index], isUsed);
 
     if (!isUsed) {
       unusedImportsPresents = true;
