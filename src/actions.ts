@@ -13,6 +13,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
     const namedImportMatch = line.match(/import\s+\{\s*([^}]+)\s*\}\s+from/);
     const wildcardImportMatch = line.match(/^import\s+\*\s+as\s+([a-zA-Z_$][a-zA-Z_$0-9]*)\s+from/);
     const typeImportMatch = line.match(/^import\s+type\s+\{\s*([^}]+)\s*\}\s+from/);
+    const combinedImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)?,?\s*\{\s*([^}]+)\s*\}\s+from/);
 
 
     let isUsed = false;
@@ -24,7 +25,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
       }
     }
     
-    if (namedImportMatch) {
+    else if (namedImportMatch) {
       const namedImports = namedImportMatch[1].split(',').map((name) => name.trim());
       const usedNamedImports = namedImports.filter((name) => {
         return usedIdentifiers.has(name) && !new RegExp(`${name}\s*:`).test(text);
@@ -35,15 +36,20 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         const updatedLine = `import { ${usedNamedImports.join(', ')} } from` + line.split('from')[1];
         lines[index] = updatedLine;
       }
+
+      if(usedNamedImports.length < namedImports.length ){
+        unusedImportsPresents = true;
+      }
+      
     }
 
-    if (wildcardImportMatch) {
+    else if (wildcardImportMatch) {
       const wildcardImport = wildcardImportMatch[1];
       if (usedIdentifiers.has(wildcardImport)) {
         isUsed = true;
       }
     }
-    if (typeImportMatch) {
+    else if (typeImportMatch) {
       const typeImports = typeImportMatch[1].split(',').map((name) => name.trim());
       const usedTypeImports = typeImports.filter((name) => usedIdentifiers.has(name));
 
@@ -53,18 +59,18 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         lines[index] = updatedLine;
       }
     }
-    const combinedImportMatch = line.match(/^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)?,?\s*\{\s*([^}]+)\s*\}\s+from/);
-    if (combinedImportMatch) {
+    else if (combinedImportMatch) {
       const defaultImport = combinedImportMatch[1];
       const namedImports = combinedImportMatch[2].split(',').map((name) => name.trim());
 
       const usedNamedImports = namedImports.filter((name) => usedIdentifiers.has(name));
       const isDefaultUsed = defaultImport && usedIdentifiers.has(defaultImport);
-
+      if(usedNamedImports.length < namedImports.length || !isDefaultUsed){
+        unusedImportsPresents = true;
+      }
       
       if (isDefaultUsed || usedNamedImports.length > 0) {
         isUsed = true;
-        unusedImportsPresents = true;
         let updatedLine = 'import ';
         if (isDefaultUsed) {
           updatedLine += defaultImport;
