@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { removeUnusedImports } from "./imports";
+import { FILES_TO_EXCLUDE, FILES_TO_INCLUDE } from "./constants";
 
 export async function removeUnusedImportsInCurrentFile(): Promise<void> {
   const editor = vscode.window.activeTextEditor;
@@ -27,8 +28,7 @@ export async function removeUnusedImportsInCurrentFile(): Promise<void> {
 }
 
 export async function removeUnusedImportsInProject(): Promise<void> {
-  const files = await vscode.workspace.findFiles('{app,src}/**/*.{js,jsx,ts,tsx}',
-    '**/node_modules/**');
+  const files = await vscode.workspace.findFiles(FILES_TO_INCLUDE, FILES_TO_EXCLUDE);
 
   for (const file of files) {
     const document = await vscode.workspace.openTextDocument(file);

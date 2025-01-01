@@ -5,3 +5,6 @@ export const importRegexs = {
     TYPE_IMPORT: /^import\s+type\s+\{\s*([^}]+)\s*\}\s+from/,
     COMBINED_IMPORT: /^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)?,?\s*\{\s*([^}]+)\s*\}\s+from/
 };
+
+export const FILES_TO_INCLUDE = '{app,src}/**/*.{js,jsx,ts,tsx}';
+export const FILES_TO_EXCLUDE = '**/node_modules/**';
