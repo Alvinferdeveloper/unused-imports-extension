@@ -30,12 +30,12 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         const usedNamedImports = namedImports.filter((name) => {
           return usedIdentifiers.has(name) && !new RegExp(`${name}\s*:`).test(text);
         });
-        const namedImport = namedImportAction(usedNamedImports, namedImports, usedIdentifiers, line);
+        const namedImport = namedImportAction(usedNamedImports, namedImports, line);
         isUsed = namedImport.isUsed;
-        unusedImportsPresents = namedImport.unusedImportsPresents;
-        if (namedImport.newLine) {
-          lines[index] = namedImport.newLine;
+        if(!unusedImportsPresents){
+            unusedImportsPresents = namedImport.unusedImportsPresents;
         }
+          lines[index] = namedImport.newLine;
       }
   
       else if (wildcardImportMatch) {
@@ -92,18 +92,17 @@ function classifyLines(lines: string[]) {
     return { usedIdentifiers, importStatements };
 }
 
-function namedImportAction(usedNamedImports: string[], namedImports: string[], usedIdentifiers: Set<string>, line: string) {
+function namedImportAction(usedNamedImports: string[], namedImports: string[], line: string) {
     let isUsed = false;
+    let newLine = line;
     let unusedImportsPresents = false;
-    let newLine = null;
-    if (usedNamedImports.length > 0) {
+    if (usedNamedImports.length > 0 && usedNamedImports.length < namedImports.length) {
         isUsed = true;
+        unusedImportsPresents = true;
         const updatedLine = `import { ${usedNamedImports.join(', ')} } from` + line.split('from')[1];
         newLine = updatedLine;
-    }
-
-    if (usedNamedImports.length < namedImports.length) {
-        unusedImportsPresents = true;
+    }else if(usedNamedImports.length === namedImports.length){
+        isUsed = true;
     }
 
     return { isUsed, newLine, unusedImportsPresents };
