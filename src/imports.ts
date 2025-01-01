@@ -69,7 +69,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
   
       if (!isUsed) {
         unusedImportsPresents = true;
-        lines[index] = ''; // Remove unused import
+        lines.splice(index, 1); // Remove unused import
       }
     });
     const newLines = lines.join('\n');
