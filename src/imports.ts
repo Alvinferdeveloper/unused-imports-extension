@@ -4,6 +4,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
     const lines = text.split('\n');
     let unusedImportsPresents = false;
     let isUsed = false;
+    let linesRemoved = 0;
   
     // First pass: collect imports and find identifiers used in the code
     const { usedIdentifiers, importStatements } = classifyLines(lines);
@@ -69,7 +70,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
   
       if (!isUsed) {
         unusedImportsPresents = true;
-        lines.splice(index, 1); // Remove unused import
+        lines.splice(index - linesRemoved++, 1); // Remove unused import
       }
     });
     const newLines = lines.join('\n');
