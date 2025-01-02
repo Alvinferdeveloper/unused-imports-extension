@@ -6,5 +6,5 @@ export const importRegexs = {
     COMBINED_IMPORT: /^import\s+([a-zA-Z_$][a-zA-Z_$0-9]*)?,?\s*\{\s*([^}]+)\s*\}\s+from/
 };
 
-export const FILES_TO_INCLUDE = '{app,src}/**/*.{js,jsx,ts,tsx}';
-export const FILES_TO_EXCLUDE = '**/node_modules/**';
+export const FILES_TO_INCLUDE = '{src,app,components,pages}/**/*.{js,jsx,ts,tsx,vue}';
+export const FILES_TO_EXCLUDE = '{**/node_modules/**,**/.next/**,**/dist/**,**/build/**,**/out/**,**/coverage/**,**/public/**}';
