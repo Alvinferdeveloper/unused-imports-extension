@@ -17,4 +17,18 @@ suite('Extension Test Suite', () => {
     assert.strictEqual(result.newLines.trim(), inputText.trim());
     assert.strictEqual(result.unusedImportsPresents, false);
   });
+
+  test('removeUnusedImports - Unused default imports', () => {
+    const inputText = `
+      import 'something' from 'module';
+      const x = 10;
+    `;
+    const result = removeUnusedImports(inputText);
+
+    const expectedText = `
+      const x = 10;
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
 });
