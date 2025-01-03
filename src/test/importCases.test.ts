@@ -31,4 +31,18 @@ suite('Extension Test Suite', () => {
     assert.strictEqual(result.newLines.trim(), expectedText);
     assert.strictEqual(result.unusedImportsPresents, true);
   });
+
+  test('removeUnusedImports - one unused named import on a single line', () => {
+    const inputText = `
+      import { something } from 'module';
+      const x = 10;
+    `;
+    const result = removeUnusedImports(inputText);
+
+    const expectedText = `
+      const x = 10;
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
 });
