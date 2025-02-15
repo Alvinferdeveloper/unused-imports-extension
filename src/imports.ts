@@ -3,7 +3,6 @@ import { importRegexs } from "./constants";
 export function removeUnusedImports(text: string): { newLines: string, unusedImportsPresents: boolean } {
     const lines = text.split('\n');
     let unusedImportsPresents = false;
-    let isUsed = false;
     let linesRemoved = 0;
   
     // First pass: collect imports and find identifiers used in the code
@@ -11,6 +10,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
   
     // Second pass: filter unused imports
     importStatements.forEach(({ line, index }) => {
+      let isUsed = false;
       const {
         defaultImportMatch,
         namedImportMatch,
@@ -36,7 +36,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         if(!unusedImportsPresents){
             unusedImportsPresents = namedImport.unusedImportsPresents;
         }
-          lines[index] = namedImport.newLine;
+          lines[index-linesRemoved] = namedImport.newLine;
       }
   
       else if (wildcardImportMatch) {
@@ -52,7 +52,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         if (usedTypeImports.length > 0) {
           isUsed = true;
           const updatedLine = `import type { ${usedTypeImports.join(', ')} } from` + line.split('from')[1];
-          lines[index] = updatedLine;
+          lines[index-linesRemoved] = updatedLine;
         }
       }
       else if (combinedImportMatch) {
@@ -62,15 +62,15 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         isUsed = combinedImport.isUsed;
         unusedImportsPresents = combinedImport.unusedImportsPresents;
         if(combinedImport.newLine){
-          lines[index] = combinedImport.newLine;
+          lines[index-linesRemoved] = combinedImport.newLine;
         }
         
       }
   
-  
+    
       if (!isUsed) {
         unusedImportsPresents = true;
-        lines.splice(index - linesRemoved++, 1); // Remove unused import
+        lines.splice(index-linesRemoved++, 1); // Remove unused import
       }
     });
     const newLines = lines.join('\n');
@@ -105,7 +105,6 @@ function namedImportAction(usedNamedImports: string[], namedImports: string[], l
     }else if(usedNamedImports.length === namedImports.length){
         isUsed = true;
     }
-
     return { isUsed, newLine, unusedImportsPresents };
 }
 
