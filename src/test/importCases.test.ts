@@ -90,4 +90,15 @@ suite('Extension Test Suite', () => {
     assert.strictEqual(result.newLines.trim(), expectedText);
     assert.strictEqual(result.unusedImportsPresents, true);
   });
+
+  test('removeUnusedImports - type imports in TypeScript', () => {
+    const inputText = `
+      import type { MyType } from 'module';
+      import { usedFunction } from 'module';
+      const x: MyType = usedFunction();
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
 });
