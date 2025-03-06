@@ -77,4 +77,17 @@ suite('Extension Test Suite', () => {
     assert.strictEqual(result.newLines.trim(), expectedText);
     assert.strictEqual(result.unusedImportsPresents, true);
   });
+
+  test('removeUnusedImports - namespace imports', () => {
+    const inputText = `
+      import * as myModule from 'module';
+      const x = 10;
+    `;
+    const result = removeUnusedImports(inputText);
+    const expectedText = `
+      const x = 10;
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
 });
