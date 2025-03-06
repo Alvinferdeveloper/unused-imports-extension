@@ -17,7 +17,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         wildcardImportMatch,
         typeImportMatch,
         combinedImportMatch
-      } = importMatches(line);
+      } = importMatches(line.trim());
   
       if (defaultImportMatch) {
         const defaultImport = defaultImportMatch[1];
@@ -48,7 +48,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
       else if (typeImportMatch) {
         const typeImports = typeImportMatch[1].split(',').map((name) => name.trim());
         const usedTypeImports = typeImports.filter((name) => usedIdentifiers.has(name));
-  
+        console.log(typeImports, "typeImports");
         if (usedTypeImports.length > 0) {
           isUsed = true;
           const updatedLine = `import type { ${usedTypeImports.join(', ')} } from` + line.split('from')[1];
@@ -73,6 +73,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         lines.splice(index-linesRemoved++, 1); // Remove unused import
       }
     });
+    console.log(lines, 'now');
     const newLines = lines.join('\n');
     return { newLines, unusedImportsPresents };
   }
