@@ -9,7 +9,7 @@ suite('Extension Test Suite for unused imports', () => {
 
   test('removeUnusedImports - Unused default imports', () => {
     const inputText = `
-      import 'something' from 'module';
+      import something from 'module';
       const x = 10;
     `;
     const result = removeUnusedImports(inputText);
