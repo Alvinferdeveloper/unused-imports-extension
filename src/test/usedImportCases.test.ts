@@ -13,6 +13,16 @@ suite('Extension Test Suite for used imports', () => {
     assert.strictEqual(result.unusedImportsPresents, false);
   });
 
+  test('keep usedImports - namespace import being used', () => {
+    const inputText = `
+      import * as myModule from 'module';
+      const result = myModule.something();
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
+
   test('keep usedImports - one used import on a single line', () => {
     const inputText = `
       import { something } from 'module';
