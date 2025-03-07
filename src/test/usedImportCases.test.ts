@@ -100,4 +100,16 @@ suite('Extension Test Suite for used imports', () => {
     assert.strictEqual(result.newLines.trim(), inputText.trim());
     assert.strictEqual(result.unusedImportsPresents, false);
   });
+
+  test('keep usedImports - imports used in JSX/TSX', () => {
+    const inputText = `
+      import { Component } from 'framework';
+      function App() {
+        return <Component />;
+      }
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
 });
