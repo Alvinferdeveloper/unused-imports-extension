@@ -56,4 +56,15 @@ suite('Extension Test Suite for used imports', () => {
     assert.strictEqual(result.newLines.trim(), inputText.trim());
     assert.strictEqual(result.unusedImportsPresents, false);
   });
+
+  test('keep usedImports - combined default and named imports being used', () => {
+    const inputText = `
+      import defaultModule, { namedExport } from 'module';
+      const result1 = defaultModule.method();
+      const result2 = namedExport();
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
 });
