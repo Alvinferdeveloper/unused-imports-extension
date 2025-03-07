@@ -124,4 +124,17 @@ suite('Extension Test Suite for used imports', () => {
     assert.strictEqual(result.unusedImportsPresents, false);
   });
 
+  test('keep usedImports - object property with same name', () => {
+    const inputText = `
+      import { something } from 'module';
+      const obj = {
+        something: "value"
+      };
+      console.log(something);
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
+
 });
