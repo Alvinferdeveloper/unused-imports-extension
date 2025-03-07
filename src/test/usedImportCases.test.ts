@@ -112,4 +112,15 @@ suite('Extension Test Suite for used imports', () => {
     assert.strictEqual(result.newLines.trim(), inputText.trim());
     assert.strictEqual(result.unusedImportsPresents, false);
   });
+
+  test('keep usedImports - imports used in object destructuring', () => {
+    const inputText = `
+      import { something } from 'module';
+      const { something: renamed } = someObject;
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
+
 });
