@@ -23,6 +23,7 @@ export function importMatches(line: string){
 }
 
 export function classifyLines(lines: string[]) {
+    const { VALID_IDENTIFIER } = importRegexs;
     const usedIdentifiers = new Set<string>();
     const importStatements: { line: string; index: number }[] = [];
     lines.forEach((line, index) => {
@@ -30,7 +31,7 @@ export function classifyLines(lines: string[]) {
         if (importMatch) {
             importStatements.push({ line, index });
         } else {
-            const matches = line.match(/\b[a-zA-Z_$][a-zA-Z_$0-9]*\b/g);
+            const matches = line.match(VALID_IDENTIFIER);
             if (matches) {
                 matches.forEach((id) => usedIdentifiers.add(id));
             }

@@ -29,7 +29,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
       else if (namedImportMatch) {
         const namedImports = namedImportMatch[1].split(',').map((name) => name.trim());
         const usedNamedImports = namedImports.filter((name) => {
-          return usedIdentifiers.has(name) && !new RegExp(`${name}\s*:`).test(text);
+          return usedIdentifiers.has(name);
         });
         const namedImport = namedImportAction(usedNamedImports, namedImports, line);
         isUsed = namedImport.isUsed;
