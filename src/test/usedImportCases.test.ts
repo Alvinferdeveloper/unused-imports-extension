@@ -88,4 +88,16 @@ suite('Extension Test Suite for used imports', () => {
     assert.strictEqual(result.newLines.trim(), inputText.trim());
     assert.strictEqual(result.unusedImportsPresents, false);
   });
+
+  test('keep usedImports - mixed type and value imports being used', () => {
+    const inputText = `
+      import type { Type1 } from 'module';
+      import { value1, type Type2 } from 'module';
+      const x: Type1 = value1();
+      const y: Type2 = {};
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
 });
