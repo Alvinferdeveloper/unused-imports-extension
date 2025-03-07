@@ -137,4 +137,18 @@ suite('Extension Test Suite for used imports', () => {
     assert.strictEqual(result.unusedImportsPresents, false);
   });
 
+  test('keep usedImports - mixed object property and usage', () => {
+    const inputText = `
+      import { something } from 'module';
+      const obj = {
+        something: "value"
+      };
+      const { something: renamed } = otherObj;
+      something();
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
+
 });
