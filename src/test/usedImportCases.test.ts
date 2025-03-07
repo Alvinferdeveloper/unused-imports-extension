@@ -117,6 +117,7 @@ suite('Extension Test Suite for used imports', () => {
     const inputText = `
       import { something } from 'module';
       const { something: renamed } = someObject;
+      something();
     `;
     const result = removeUnusedImports(inputText);
     assert.strictEqual(result.newLines.trim(), inputText.trim());
