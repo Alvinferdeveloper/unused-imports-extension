@@ -67,4 +67,14 @@ suite('Extension Test Suite for used imports', () => {
     assert.strictEqual(result.newLines.trim(), inputText.trim());
     assert.strictEqual(result.unusedImportsPresents, false);
   });
+
+  test('keep usedImports - aliased imports being used', () => {
+    const inputText = `
+      import { something as somethingElse } from 'module';
+      const result = somethingElse();
+    `;
+    const result = removeUnusedImports(inputText);
+    assert.strictEqual(result.newLines.trim(), inputText.trim());
+    assert.strictEqual(result.unusedImportsPresents, false);
+  });
 });
