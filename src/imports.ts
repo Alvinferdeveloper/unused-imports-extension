@@ -1,4 +1,4 @@
-import { classifyLines, importMatches } from "./utils/imports";
+import { classifyLines, countLeadingSpaces, importMatches } from "./utils/imports";
 
 export function removeUnusedImports(text: string): { newLines: string, unusedImportsPresents: boolean } {
     const lines = text.split('\n');
@@ -54,10 +54,17 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
       else if (typeImportMatch) {
         const typeImports = typeImportMatch[1].split(',').map((name) => name.trim());
         const usedTypeImports = typeImports.filter((name) => usedIdentifiers.has(name));
-        if (usedTypeImports.length > 0) {
+        if(usedTypeImports.length !== 0){
           isUsed = true;
-          const updatedLine = `import type { ${usedTypeImports.join(', ')} } from` + line.split('from')[1];
+        }
+        if (usedTypeImports.length > 0 && usedTypeImports.length < typeImports.length) {
+          const blankSpacesCount = countLeadingSpaces(line);
+          unusedImportsPresents = true;
+          const updatedLine = `${' '.repeat(blankSpacesCount)}import type { ${usedTypeImports.join(', ')} } from` + line.split('from')[1];
           lines[index-linesRemoved] = updatedLine;
+        }
+        else {
+          lines[index-linesRemoved] = line;
         }
       }
       else if (combinedImportMatch) {

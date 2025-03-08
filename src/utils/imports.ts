@@ -40,3 +40,8 @@ export function classifyLines(lines: string[]) {
     });
     return { usedIdentifiers, importStatements };
 }
+
+export function countLeadingSpaces(str: string) {
+    const match = str.match(/^\s*/); // Encuentra espacios en blanco al inicio
+    return match ? match[0].length : 0;
+}
