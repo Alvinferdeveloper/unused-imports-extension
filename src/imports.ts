@@ -27,18 +27,9 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
       }
   
       else if (namedImportMatch) {
-        const namedImports = namedImportMatch[1].split(',').map((name) => {
-          if(name.trim().includes('as')){
-            return name.trim().split(' ')[2];
-          }
-          const nameParts = name.trim().split(' ');
-          if(nameParts[0] === 'type'){
-            return nameParts[1];
-          }
-          return nameParts[0];
-        });
+        const namedImports = namedImportMatch[1].split(',').map((name) => name.trim());
         const usedNamedImports = namedImports.filter((name) => {
-          return usedIdentifiers.has(name);
+          return usedIdentifiers.has(name.trim().split(' ')[2]) || usedIdentifiers.has(name.trim().split(' ')[1]) || usedIdentifiers.has(name);
         });
 
         const namedImport = namedImportAction(usedNamedImports, namedImports, line);
