@@ -97,7 +97,8 @@ function namedImportAction(usedNamedImports: string[], namedImports: string[], l
     if (usedNamedImports.length > 0 && usedNamedImports.length < namedImports.length) {
         isUsed = true;
         unusedImportsPresents = true;
-        const updatedLine = `import { ${usedNamedImports.join(', ')} } from` + line.split('from')[1];
+        const blankSpacesCount = countLeadingSpaces(line);
+        const updatedLine = `${' '.repeat(blankSpacesCount)}import { ${usedNamedImports.join(', ')} } from` + line.split('from')[1];
         newLine = updatedLine;
     }else if(usedNamedImports.length === namedImports.length){
         isUsed = true;
