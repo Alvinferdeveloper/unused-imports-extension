@@ -111,7 +111,9 @@ function namedImportAction(usedNamedImports: string[], namedImports: string[], l
 }
 
 function combinedImportAction(namedImports: string[], defaultImport: string, usedIdentifiers: Set<string>, line: string) {
-    const usedNamedImports = namedImports.filter((name) => usedIdentifiers.has(name));
+    const usedNamedImports = namedImports.filter((name) => 
+      usedIdentifiers.has(name.trim().split(' ')[2]) || usedIdentifiers.has(name)
+    );
     const isDefaultUsed = defaultImport && usedIdentifiers.has(defaultImport);
     let unusedImportsPresents = false;
     let isUsed = false;
