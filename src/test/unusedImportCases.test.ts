@@ -157,6 +157,8 @@ suite('Extension Test Suite for unused imports', () => {
     `;
     const result = removeUnusedImports(inputText);
     const expectedText = `
+      // const x = unused();
+      /* const y = unused(); */
       const z = 10;
     `.trim();
     assert.strictEqual(result.newLines.trim(), expectedText);
