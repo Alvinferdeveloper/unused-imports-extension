@@ -28,6 +28,9 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
   
       else if (namedImportMatch) {
         const namedImports = namedImportMatch[1].split(',').map((name) => {
+          if(name.trim().includes('as')){
+            return name.trim().split(' ')[2];
+          }
           const nameParts = name.trim().split(' ');
           if(nameParts[0] === 'type'){
             return nameParts[1];
@@ -37,6 +40,7 @@ export function removeUnusedImports(text: string): { newLines: string, unusedImp
         const usedNamedImports = namedImports.filter((name) => {
           return usedIdentifiers.has(name);
         });
+
         const namedImport = namedImportAction(usedNamedImports, namedImports, line);
         isUsed = namedImport.isUsed;
         if(!unusedImportsPresents){
