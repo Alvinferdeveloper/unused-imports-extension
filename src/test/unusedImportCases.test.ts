@@ -226,4 +226,118 @@ suite('Extension Test Suite for unused imports', () => {
     assert.strictEqual(result.unusedImportsPresents, true);
   });
 
+  test('removeUnusedImports - keep named import in named combined import', () => {
+    const inputText = `
+      import { used, type AnotherUnused, lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y = used();
+    `;
+    const result = removeUnusedImports(inputText);
+    const expectedText = `
+      import { used } from 'module';
+      const x = 10;
+      const y = used();
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
+
+  test('removeUnusedImports - keep type import in named combined import', () => {
+    const inputText = `
+      import { unused, type UsedType, lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y:UsedType = "hola";
+    `;
+    const result = removeUnusedImports(inputText);
+    const expectedText = `
+      import { type UsedType } from 'module';
+      const x = 10;
+      const y:UsedType = "hola";
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
+
+  test('removeUnusedImports - keep aliased import named combined import', () => {
+    const inputText = `
+      import { unused, type UnUsedType, lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y = lastUsedAlias();
+    `;
+    const result = removeUnusedImports(inputText);
+    const expectedText = `
+      import { lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y = lastUsedAlias();
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
+
+  test('removeUnusedImports - keep named import in default and combined import', () => {
+    const inputText = `
+      import defaultImport, { used, type UnUsedType, lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y = used();
+    `;
+    const result = removeUnusedImports(inputText);
+    const expectedText = `
+      import { used } from 'module';
+      const x = 10;
+      const y = used();
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
+
+  test('removeUnusedImports - keep type import in default and combined import', () => {
+    const inputText = `
+      import defaultImport, { unused, type UsedType, lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y: UsedType = 'hola';
+    `;
+    const result = removeUnusedImports(inputText);
+    const expectedText = `
+      import { type UsedType } from 'module';
+      const x = 10;
+      const y: UsedType = 'hola';
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
+
+  test('removeUnusedImports - keep aliased import in default and combined import', () => {
+    const inputText = `
+      import defaultImport, { unused, type UnUsedType, lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y = lastUsedAlias();
+    `;
+    const result = removeUnusedImports(inputText);
+    const expectedText = `
+      import { lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y = lastUsedAlias();
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
+
+  test('removeUnusedImports - keep default import in default and combined import', () => {
+    const inputText = `
+      import defaultImport, { unused, type UnUsedType, lastUsed as lastUsedAlias } from 'module';
+      const x = 10;
+      const y = defaultImport();
+    `;
+    const result = removeUnusedImports(inputText);
+    const expectedText = `
+      import defaultImport from 'module';
+      const x = 10;
+      const y = defaultImport();
+    `.trim();
+    assert.strictEqual(result.newLines.trim(), expectedText);
+    assert.strictEqual(result.unusedImportsPresents, true);
+  });
+
+
+
 });
