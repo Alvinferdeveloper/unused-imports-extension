@@ -3,6 +3,7 @@
   "displayName": "unused imports",
   "description": "remove unused imports in javascript/typescript files",
   "version": "0.0.1",
+  "publisher": "Alvinferdev",
   "engines": {
     "vscode": "^1.96.0"
   },
