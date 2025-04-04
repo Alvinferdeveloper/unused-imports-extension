@@ -1,8 +1,8 @@
 {
-  "name": "unused-imports",
-  "displayName": "unused imports",
+  "name": "Clean-Imports",
+  "displayName": "Clean Imports",
   "description": "remove unused imports in javascript/typescript files",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "Alvinferdev",
   "engines": {
     "vscode": "^1.96.0"
