@@ -16,6 +16,38 @@
   "main": "./out/extension.js",
   "icon": "./images/extension-logo.jpeg",
   "contributes": {
+    "configuration": {
+    "title": "CleanImports",
+    "properties": {
+      "CleanImports.includePaths": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "default": [
+          "**/*.{js,ts,jsx,tsx}"
+        ],
+        "description": "Patrones de archivos o carpetas adicionales a incluir"
+      },
+      "CleanImports.excludePaths": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "default": [
+          "**/node_modules/**",
+          "**/.next/**",
+          "**/dist/**",
+          "**/build/**",
+          "**/out/**",
+          "**/coverage/**",
+          "**/public/**",
+          "**/components/ui/**"
+        ],
+        "description": "Patrones de archivos o carpetas adicionales a excluir"
+      }
+    }
+  },
     "commands": [
       {
         "command": "extension.removeUnusedImportsInCurrentFile",

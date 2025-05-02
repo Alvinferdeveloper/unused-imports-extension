@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import { removeUnusedImports } from "./imports";
-import { FILES_TO_EXCLUDE, FILES_TO_INCLUDE } from "./constants";
 
 export async function removeUnusedImportsInCurrentFile(): Promise<void> {
   const editor = vscode.window.activeTextEditor;
@@ -28,8 +27,18 @@ export async function removeUnusedImportsInCurrentFile(): Promise<void> {
 }
 
 export async function removeUnusedImportsInProject(): Promise<void> {
-  const files = await vscode.workspace.findFiles(FILES_TO_INCLUDE, FILES_TO_EXCLUDE);
+  const config = vscode.workspace.getConfiguration('CleanImports');
 
+  const userInclude: string[] = config.get('includePaths', []);
+  const userExclude: string[] = config.get('excludePaths', []);
+
+  let files: vscode.Uri[] = [];
+
+  for (const includePattern of userInclude) {
+    const excludeGlob = `{${userExclude.join(',')}}`; // Combinamos las exclusiones
+    const matchedFiles = await vscode.workspace.findFiles(includePattern, excludeGlob);
+    files.push(...matchedFiles);
+  }
   for (const file of files) {
     const document = await vscode.workspace.openTextDocument(file);
     const text = document.getText();

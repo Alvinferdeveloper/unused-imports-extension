@@ -7,6 +7,3 @@ export const importRegexs = {
     VALID_IDENTIFIER: /(?:(["'])(?:\\.|(?!\1)[^\\])*\1)|\b[a-zA-Z_$][a-zA-Z_$0-9]*\b(?!\s*:)/g,
     COMMENT: /^\s*(\/\/|\/\*|\*\/|\*).*$|.*\/\/\s*$/gm
 };
-
-export const FILES_TO_INCLUDE = '{src,app,components,pages}/**/*.{js,jsx,ts,tsx,vue}';
-export const FILES_TO_EXCLUDE = '{**/node_modules/**,**/.next/**,**/dist/**,**/build/**,**/out/**,**/coverage/**,**/public/**,**/components/ui/**}';
