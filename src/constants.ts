@@ -9,4 +9,4 @@ export const importRegexs = {
 };
 
 export const FILES_TO_INCLUDE = '{src,app,components,pages}/**/*.{js,jsx,ts,tsx,vue}';
-export const FILES_TO_EXCLUDE = '{**/node_modules/**,**/.next/**,**/dist/**,**/build/**,**/out/**,**/coverage/**,**/public/**}';
+export const FILES_TO_EXCLUDE = '{**/node_modules/**,**/.next/**,**/dist/**,**/build/**,**/out/**,**/coverage/**,**/public/**,**/components/ui/**}';
