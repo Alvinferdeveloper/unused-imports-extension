@@ -31,4 +31,24 @@ Abre la paleta de comandos (`Ctrl+Shift+P` o `Cmd+Shift+P` en Mac) y ejecuta:
 Remove Unused Imports (File) para analizar el archivo actual
 Remove Unused Imports (Project) para analizar el proyecto completo
 
+---
+
+## 🛠️ Personalización de includePath y excludePath
+
+Puedes personalizar qué archivos y carpetas serán incluidos o excluidos del análisis de la extensión modificando las opciones `includePath` y `excludePath` desde la configuración gráfica de VS Code.
+
+- **includePath**: Especifica los patrones de archivos y carpetas que serán analizados. Por defecto, suele incluir archivos `.js`, `.ts`, `.jsx` y `.tsx`.
+- **excludePath**: Especifica los patrones de archivos y carpetas que serán ignorados (por ejemplo, `node_modules`, carpetas de build, etc).
+
+### Cómo modificarlos desde la interfaz gráfica
+
+1. Abre la configuración de VS Code presionando `Ctrl + ,` (o desde el menú: Archivo > Preferencias > Configuración).
+2. En la barra de búsqueda de la parte superior, escribe `Clean Imports` para filtrar las opciones de la extensión.
+3. Localiza las opciones `Include Path` y `Exclude Path`.
+4. Edita los valores según los patrones de archivos y carpetas que deseas incluir o excluir. Puedes agregar múltiples rutas usando los botones de la interfaz.
+
+Esto te permite personalizar fácilmente el alcance del análisis sin necesidad de editar archivos JSON manualmente.
+
+---
+
 
