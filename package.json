@@ -4,6 +4,10 @@
   "description": "remove unused imports in javascript/typescript files",
   "version": "0.0.5",
   "publisher": "Alvinferdev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alvinferdeveloper/unused-imports-extension.git"
+  },
   "engines": {
     "vscode": "^1.96.0"
   },
