@@ -23,6 +23,14 @@ Realiza una limpieza profunda de todos los archivos `.js` y `.ts` en tu proyecto
 
 ---
 
+## 🎬 Demo
+
+A continuación puedes ver un ejemplo de cómo funciona la extensión:
+
+![Demo de Clean Imports](images/clean_imports_demo.gif)
+
+---
+
 ## ⚙️ Cómo usar
 
 ### 📄 Limpiar el archivo actual
