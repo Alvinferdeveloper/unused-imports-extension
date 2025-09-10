@@ -27,7 +27,7 @@ Realiza una limpieza profunda de todos los archivos `.js` y `.ts` en tu proyecto
 
 A continuación puedes ver un ejemplo de cómo funciona la extensión:
 
-![Demo de Clean Imports](https://kknyohzhzbexjimhcwed.supabase.co/storage/v1/object/sign/extension/clean_imports_demo-ezgif.com-video-to-gif-converter.gif?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80ZWNjMjQxMi00NTkzLTQ2ZjEtOTQ1Yy03MGUxM2MzYjI2ZDciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJleHRlbnNpb24vY2xlYW5faW1wb3J0c19kZW1vLWV6Z2lmLmNvbS12aWRlby10by1naWYtY29udmVydGVyLmdpZiIsImlhdCI6MTc1NTUzMzIxNywiZXhwIjoxNzg3MDY5MjE3fQ.qSDa6SASWCQ4T7hPZ1Ks7IcYXfrJwhjooB3U3a5z6hI)
+![Demo de Clean Imports](https://mcwntotzqsshlrhoxpku.supabase.co/storage/v1/object/public/proyects/clean_imports_demo-ezgif.com-video-to-gif-converter.gif)
 
 ---
 
