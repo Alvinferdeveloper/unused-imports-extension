@@ -1,8 +1,8 @@
 {
-  "name": "Clean-Imports",
-  "displayName": "Clean Imports",
+  "name": "RemoveUnusedImports",
+  "displayName": "Remove Unused JS/TS Imports",
   "description": "remove unused imports in javascript/typescript files",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "publisher": "Alvinferdev",
   "repository": {
     "type": "git",
@@ -18,12 +18,12 @@
   "activationEvents": [
   ],
   "main": "./out/extension.js",
-  "icon": "./images/extension-logo.jpg",
+  "icon": "./images/extension-logo.jpeg",
   "contributes": {
     "configuration": {
-    "title": "CleanImports",
+    "title": "RemoveUnusedImports",
     "properties": {
-      "CleanImports.includePaths": {
+      "RemoveUnusedImports.includePaths": {
         "type": "array",
         "items": {
           "type": "string"
@@ -33,7 +33,7 @@
         ],
         "description": "Patrones de archivos o carpetas adicionales a incluir"
       },
-      "CleanImports.excludePaths": {
+      "RemoveUnusedImports.excludePaths": {
         "type": "array",
         "items": {
           "type": "string"
