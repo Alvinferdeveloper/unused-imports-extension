@@ -2,7 +2,7 @@
   "name": "Clean-Imports",
   "displayName": "Clean Imports",
   "description": "remove unused imports in javascript/typescript files",
-  "version": "0.0.7",
+  "version": "0.0.10",
   "publisher": "Alvinferdev",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   "activationEvents": [
   ],
   "main": "./out/extension.js",
-  "icon": "./images/extension-logo.jpeg",
+  "icon": "./images/extension-logo.jpg",
   "contributes": {
     "configuration": {
     "title": "CleanImports",
