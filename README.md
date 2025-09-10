@@ -1,6 +1,6 @@
-# 🧹 Clean Imports
+# 🧹 Remove Unused JS/TS Imports
 
-**Clean Imports** es una extensión para VS Code que te ayuda a mantener tu código JavaScript y TypeScript limpio y ordenado eliminando automáticamente importaciones innecesarias.
+**Remove Unused JS/TS Imports** es una extensión para VS Code que te ayuda a mantener tu código JavaScript y TypeScript limpio y ordenado eliminando automáticamente importaciones innecesarias.
 
 ---
 
@@ -51,7 +51,7 @@ Puedes personalizar qué archivos y carpetas serán incluidos o excluidos del an
 ### Cómo modificarlos desde la interfaz gráfica
 
 1. Abre la configuración de VS Code presionando `Ctrl + ,` (o desde el menú: Archivo > Preferencias > Configuración).
-2. En la barra de búsqueda de la parte superior, escribe `Clean Imports` para filtrar las opciones de la extensión.
+2. En la barra de búsqueda de la parte superior, escribe `Remove Unused JS/TS Imports` para filtrar las opciones de la extensión.
 3. Localiza las opciones `Include Path` y `Exclude Path`.
 4. Edita los valores según los patrones de archivos y carpetas que deseas incluir o excluir. Puedes agregar múltiples rutas usando los botones de la interfaz.
 
